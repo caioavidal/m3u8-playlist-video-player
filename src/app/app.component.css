@@ -167,3 +167,8 @@ position: fixed;
 #status{
     color: #ff4a4a;
 }
+
+.resolution{
+    font-size: 20px;
+    color: green !important;
+}

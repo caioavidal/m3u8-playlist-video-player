@@ -21,8 +21,10 @@ export class AppComponent {
   timeout;
   timeoutInfo;
   keycode;
-  loading = false;
+  loading = true;
   error = false;
+  levels = [];
+  level = {};
   constructor(private m3uParser: M3uParserService) {
 
   }
@@ -35,25 +37,24 @@ export class AppComponent {
     this.loading = true;
     this.hls.destroy();
 
+    //console.log(this.hls.media.videowidth);
+
     this.showInfo(true);
     clearTimeout(this.timeout);
-    //clearTimeout(this.timeoutInfo);
 
     this.timeout = setTimeout(() => {
-      this.loadChannel()
+      this.loadChannel();
 
     }, 300);
   }
   async ngAfterViewInit() {
     this.today = new Date();
     this.playlist = await this.m3uParser.parse();
-    console.log(this.playlist);
 
     document.onkeyup = (event) => {
       this.keycode = event.which || event.keyCode;
 
       this.channelNumberSelector.onKeyPressed(this.keycode);
-      console.log(this.keycode);
 
       if (this.keycode == 38) {
         this.showInfo();
@@ -121,21 +122,24 @@ export class AppComponent {
 
   
   registerHlsEvents() {
+    
     this.hls.on(Hls.Events.MEDIA_ATTACHED, () => {
       this.hls.loadSource(this.playlist.tracks[this.currentChannel].file);
     });
 
-    this.hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-
-      this.video.play();
-      console.log("playing")
-      this.resetInfo();
-      this.loading = false;
+    this.hls.on(Hls.Events.LEVEL_SWITCHED , (event, data)=>{
+     this.level = this.levels[data.level];
     });
+    this.hls.on(Hls.Events.BUFFER_CREATED , (event, data)=>{
+      console.log('buffer created');
+      this.loading = false;
 
-    this.hls.on(Hls.Events.MANIFEST_LOADED, (event, data) => {
+     });
 
-      console.log('loaded');
+    this.hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+      this.video.play();
+      this.resetInfo();
+      this.levels = data.levels;
     });
 
     this.hls.on(Hls.Events.ERROR, (event, data) => {

@@ -23,6 +23,8 @@
           <div id="current" class="fadeInTop">Você está assistindo a programação tal</div>
           <!-- <div id="next">Bom Dia Cidade</div> -->
           <div id="status"  *ngIf="loading === true">Connecting...</div>
+          <div id="status" class="resolution" *ngIf="error == false && loading === false && level.width != null">{{level.width}} x {{level.height}}</div>
+          <div id="status"  *ngIf="error === true && loading == false">Can't load video</div>
         </div>
         <div class="row"></div>
       </div>
