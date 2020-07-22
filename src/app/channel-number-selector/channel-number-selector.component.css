@@ -1,0 +1,14 @@
+#channelNumberSelector{
+    width: 300px;
+    height: 100px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: black;
+  opacity: 0.7;
+}
+#channelNumberSelector div{
+font-size: 90px;
+    text-align: center;
+}

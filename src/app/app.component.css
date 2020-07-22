@@ -48,8 +48,15 @@ body{
     animation: cssAnimation 0s 5s forwards;
 }
 
+
 @keyframes cssAnimation {
     to   { opacity: 0; }
+  }
+
+  @keyframes cssfadeInTopAnimation {
+    to   { opacity: 1; }
+    to   { margin-top: 0px; }
+
   }
 
 #channelInfo .container{
@@ -60,6 +67,14 @@ body{
     top: 30%;
     left: 5%;
     position: absolute;
+}
+
+#channelNumber{
+position: fixed;
+    top: 10px;
+    right: 130px;
+    font-size: 100px;
+    float:initial;
 }
 
 #channelLogo{
@@ -77,6 +92,22 @@ body{
 .row{
     display:flex;
     flex-direction: row;
+}
+
+#epg{
+    font-size: 25px;
+}
+
+#epg #current{
+    font-size: 25px;
+    margin-top: 20px;
+    opacity: 0;
+}
+
+.fadeInTop{
+    
+    animation: cssfadeInTopAnimation 0.5s 0s forwards;
+    
 }
 
 #channelName{
@@ -110,4 +141,29 @@ body{
 }
 #next{
     flex-grow: 1;
+}
+
+.arrow-up {
+    position: absolute;
+    bottom: 115px;
+    left: 32px;
+    width: 36px !important;
+    height: 27px;
+    border-left: 18px solid transparent;
+    border-right: 18px solid transparent;
+    border-bottom: 27px solid #fff;
+}
+.arrow-down {
+    position: absolute;
+    top: 115px;
+    left: 32px;
+    width: 36px !important;
+    height: 27px;
+    border-left: 18px solid transparent;
+    border-right: 18px solid transparent;
+    border-top: 27px solid #fff;
+}
+
+#status{
+    color: #ff4a4a;
 }

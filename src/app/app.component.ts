@@ -1,7 +1,9 @@
-declare var Hls;
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { M3uParserService } from './m3u-parser.service';
-import { renderFlagCheckIfStmt } from '@angular/compiler/src/render3/view/template';
+import {ChannelNumberSelectorComponent} from './channel-number-selector/channel-number-selector.component';
+import * as jQuery from 'jquery';
+
+declare var Hls;
 
 @Component({
   selector: 'app-root',
@@ -12,13 +14,12 @@ export class AppComponent {
   title = 'm3u8-player';
   playlist;
   currentChannel = 0;
-  previousChannel = 0;
+  previousChannel = this.currentChannel;
   video;
   hls;
   today = new Date();
   timeout;
   timeoutInfo;
-  startClose = false;
   keycode;
   loading = false;
   error = false;
@@ -26,12 +27,15 @@ export class AppComponent {
 
   }
 
+  @ViewChild(ChannelNumberSelectorComponent) private channelNumberSelector: ChannelNumberSelectorComponent;
+
   preMoveChannel() {
+    this.previousChannel = this.currentChannel;
     this.error = false;
     this.loading = true;
     this.hls.destroy();
 
-    this.startClose = false;
+    this.showInfo(true);
     clearTimeout(this.timeout);
     //clearTimeout(this.timeoutInfo);
 
@@ -48,29 +52,38 @@ export class AppComponent {
     document.onkeyup = (event) => {
       this.keycode = event.which || event.keyCode;
 
-      if (event.which == 38 || event.keyCode == 38) {
-        this.startClose = false;
+      this.channelNumberSelector.onKeyPressed(this.keycode);
+      console.log(this.keycode);
+
+      if (this.keycode == 38) {
+        this.showInfo();
         ++this.currentChannel;
       }
-      if (event.which == 40 || event.keyCode == 40) {
-        this.startClose = false;
+      if (this.keycode == 40) {
+        this.showInfo();
         --this.currentChannel;
       }
 
-      if (event.which == 33 || event.keyCode == 33) {
-        
-        this.previousChannel = this.currentChannel++;
+      if (this.keycode == 33) { //channel up
+        ++this.currentChannel;
         this.preMoveChannel();
       }
 
-      if (event.which == 34 || event.keyCode == 34) {
+      if (this.keycode == 34) { //channel down
         this.currentChannel--;
         this.preMoveChannel();
       }
 
-      if (event.which == 13 || event.keyCode == 13) { //enter
-        
-        this.preMoveChannel();
+      if (this.keycode == 13) { //enter
+
+
+        this.showInfo(true);
+
+        if (this.currentChannel != this.previousChannel) {
+
+          this.preMoveChannel();
+        }
+
       }
     };
 
@@ -85,13 +98,11 @@ export class AppComponent {
   resetInfo() {
     // this.timeoutInfo = window.setTimeout(()=>this.hideInfo = true,5000);
     //setTimeout(() => this.hideInfo = true);
-    this.startClose = true;
-
+    this.showInfo();
   }
 
   loadChannel() {
     // bind them together
-    console.log('channel loaded');
 
     this.hls = new Hls(this.config);
     this.registerHlsEvents();
@@ -99,6 +110,16 @@ export class AppComponent {
 
   }
 
+  showInfo(fadeCurrent = false) {
+    jQuery('#channelInfo').removeClass('close');
+    fadeCurrent == true && jQuery('#current').removeClass('fadeInTop');
+    window.setTimeout(() => {
+      jQuery('#channelInfo').addClass('close');
+      fadeCurrent == true && jQuery('#current').addClass('fadeInTop');
+    }, 0);
+  }
+
+  
   registerHlsEvents() {
     this.hls.on(Hls.Events.MEDIA_ATTACHED, () => {
       this.hls.loadSource(this.playlist.tracks[this.currentChannel].file);
@@ -112,11 +133,16 @@ export class AppComponent {
       this.loading = false;
     });
 
-    this.hls.on(Hls.Events.ERROR,  (event, data) =>{
+    this.hls.on(Hls.Events.MANIFEST_LOADED, (event, data) => {
+
+      console.log('loaded');
+    });
+
+    this.hls.on(Hls.Events.ERROR, (event, data) => {
       var errorType = data.type;
       var errorDetails = data.details;
       var errorFatal = data.fatal;
-      console.log('error');
+      console.log('error', data);
       this.error = true;
       this.loading = false;
       switch (data.details) {
@@ -130,65 +156,6 @@ export class AppComponent {
   }
 
   config = {
-    autoStartLoad: true,
-    startPosition: -1,
-    debug: false,
-    capLevelOnFPSDrop: false,
-    capLevelToPlayerSize: false,
-    defaultAudioCodec: undefined,
-    initialLiveManifestSize: 1,
-    maxBufferLength: 30,
-    maxMaxBufferLength: 600,
-    maxBufferSize: 60*1000*1000,
-    maxBufferHole: 0.5,
-    lowBufferWatchdogPeriod: 0.5,
-    highBufferWatchdogPeriod: 3,
-    nudgeOffset: 0.1,
-    nudgeMaxRetry: 3,
-    maxFragLookUpTolerance: 0.25,
-    liveSyncDurationCount: 3,
-    liveMaxLatencyDurationCount: Infinity,
-    liveDurationInfinity: false,
-    liveBackBufferLength: Infinity,
-    enableWorker: true,
-    enableSoftwareAES: true,
-    manifestLoadingTimeOut: 10000,
-    manifestLoadingMaxRetry: 1,
-    manifestLoadingRetryDelay: 1000,
-    manifestLoadingMaxRetryTimeout: 64000,
-    startLevel: undefined,
-    levelLoadingTimeOut: 10000,
-    levelLoadingMaxRetry: 4,
-    levelLoadingRetryDelay: 1000,
-    levelLoadingMaxRetryTimeout: 64000,
-    fragLoadingTimeOut: 20000,
-    fragLoadingMaxRetry: 6,
-    fragLoadingRetryDelay: 1000,
-    fragLoadingMaxRetryTimeout: 64000,
-    startFragPrefetch: false,
-    testBandwidth: true,
-    fpsDroppedMonitoringPeriod: 5000,
-    fpsDroppedMonitoringThreshold: 0.2,
-    appendErrorMaxRetry: 3,
-    enableWebVTT: true,
-    enableCEA708Captions: true,
-    stretchShortVideoTrack: false,
-    maxAudioFramesDrift: 1,
-    forceKeyFrameOnDiscontinuity: true,
-    abrEwmaFastLive: 3.0,
-    abrEwmaSlowLive: 9.0,
-    abrEwmaFastVoD: 3.0,
-    abrEwmaSlowVoD: 9.0,
-    abrEwmaDefaultEstimate: 500000,
-    abrBandWidthFactor: 0.95,
-    abrBandWidthUpFactor: 0.7,
-    abrMaxWithRealBitrate: false,
-    maxStarvationDelay: 4,
-    maxLoadingDelay: 4,
-    minAutoBitrate: 0,
-    emeEnabled: false,
-    widevineLicenseUrl: undefined,
-    drmSystemOptions: {},
-};
+  };
 
 }
