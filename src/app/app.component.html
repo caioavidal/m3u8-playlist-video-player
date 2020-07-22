@@ -1,0 +1,25 @@
+<div id="player">
+  <div id="loading" *ngIf="loading === true"></div>
+  <div id="error" *ngIf="error === true"></div>
+  <video id="video"></video>
+  <div id="channelInfo" *ngIf="playlist != null" [ngClass]="{'close': startClose == true}" >
+    <div class="container">
+      <div id="channelLogo">
+        <img [src]="playlist.tracks[currentChannel].params['tvg-logo']" />
+      </div>
+      <div id="info">
+        <div class="row">
+          <div id="channelNumber">{{500 + currentChannel}} </div>
+          <div id="channelName">{{playlist.tracks[currentChannel].title}}</div>
+          <div id="time">{{ today | date: 'HH:mm'}}</div>
+        </div>
+        <!-- <div class="row" id="epg">
+          <div id="current">Bom Dia Rio de Janeiro</div>
+          <div id="next">Bom Dia Cidade</div>
+        </div> -->
+        <div class="row"></div>
+      </div>
+    </div>
+  </div>
+
+</div>

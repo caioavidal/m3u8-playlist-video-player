@@ -1,0 +1,11 @@
+
+
+body,html {
+    margin: 0;
+    padding: 0;
+    height: calc(100vh - 4px);
+    background-color: black;
+}
+* {
+    box-sizing: border-box;
+}
