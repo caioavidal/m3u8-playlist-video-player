@@ -1,0 +1,13 @@
+<div>
+    <div class="channel-row" [ngClass]="{'selected': i == selected}" *ngFor="let channel of channels; let i = index" (click)="selectChannel(channel, i)">
+        <div class="channel-number vertical">
+            <span> {{i+1}} </span>
+        </div>
+        <!-- <div class="channel-logo vertical">
+            <img src="assets/tv.svg">
+        </div> -->
+        <div class="channel-name vertical">
+            <span>{{channel.Name}}</span>
+        </div>
+    </div>
+</div>

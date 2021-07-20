@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import * as _ from 'lodash';
+import { Track } from "../models/track.entity";
+import { Group } from "../models/group.entity";
+import { Channel } from "../models/channel.entity";
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +24,6 @@ export class M3uParserService {
 
       var xmlhttp = new XMLHttpRequest();
 
-    
-
-
       xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4) {
           var allText = xmlhttp.responseText;
@@ -38,11 +39,13 @@ export class M3uParserService {
     });
   }
 
-  async parse() {
-    var result: any = {
-      tracks: [],
-      title: ''
-    };
+  async parse(): Promise<Group[]> {
+    //var groups: Group[] = [];
+
+    var result:any= {};
+    result.tracks = [];
+
+    result.groups = {};
 
     return new Promise((resolve, reject) => {
 
@@ -83,18 +86,35 @@ export class M3uParserService {
 
           current.file = line;
 
-          //console.log(util.inspect(current));
-          result.tracks.push(current);
+          if(result.groups[current.params['group-title']] == null)
+          {
+            result.groups[current.params['group-title']]  = [];   
+          }
+          result.groups[current.params['group-title']].push(current);
 
           current = {};
         }
 
-        resolve(result);
+        var groupNames = Object.keys(result.groups);
+
+        var groups = groupNames.map(g=> new Group(g));
+        groups.forEach(group => {
+            var channels = result.groups[group.Name].map(t=> new Channel(t.title, t.params['tvg-logo'], new Track(t.title,t.file)));
+            group.Channels = channels;
+        });
+
+        result = this.group(result);
+
+        resolve(groups);
 
       });
     });
+  }
 
-
+  private group(data): any{
+      _.forEach(data.tracks, (i)=> i.name = i.title.replace(" FHD[H265]","").replace(" FHD","").replace(" HD","").replace(" SD","").replace(" [4K]",""))
+      
+     return _.groupBy(data.tracks, (i)=>i.name);
   }
 
 

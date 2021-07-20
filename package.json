@@ -22,6 +22,7 @@
     "animate.css": "^4.1.0",
     "hls.js": "^0.14.5",
     "jquery": "^3.5.1",
+    "lodash": "^4.17.21",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"
@@ -33,6 +34,7 @@
     "@types/hls.js": "^0.13.0",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
+    "@types/lodash": "^4.14.171",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0-next.1",
     "jasmine-core": "~3.5.0",

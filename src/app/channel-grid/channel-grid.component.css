@@ -1,0 +1,40 @@
+div {
+    color: white;
+}
+
+.channel-row {
+    border: 1px solid gray;
+    height: auto;
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+}
+
+.channel-row .vertical {
+    height: 70px;
+    display: table;
+}
+
+.channel-name {
+    margin-left: 10px;
+}
+
+.channel-row .vertical span,
+img {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.channel-number {
+    font-size: 30px;
+    margin-left: 10px
+}
+
+.channel-logo img {
+    width: 30px;
+    margin-left: 10px;
+}
+
+.selected {
+    background-color: #161d2257;
+}

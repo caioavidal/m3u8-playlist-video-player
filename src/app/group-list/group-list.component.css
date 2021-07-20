@@ -1,0 +1,28 @@
+div {
+    color: white;
+    margin-top: 20%;
+}
+
+ul {
+    text-align: left;
+    list-style: none;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    padding: 0 0 14px 20px;
+    color: rgba(219, 219, 219, 0.733);
+    font-size: 20px;
+}
+
+li:hover {
+    font-size: 23px;
+    color: rgba(219, 219, 219, 1);
+}
+
+.selected {
+    font-size: 23px;
+    color: rgba(219, 219, 219, 1);
+}

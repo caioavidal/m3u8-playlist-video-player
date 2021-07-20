@@ -1,0 +1,5 @@
+<div>
+    <ul>
+        <li [ngClass]="{'selected': i == selected}" *ngFor="let group of groups; let i = index" (click)="selectGroup(group, i)">{{group.Name}}</li>
+    </ul>
+</div>

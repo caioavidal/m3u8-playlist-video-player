@@ -1,27 +1,40 @@
-<div id="player">
+<div class="grid-container">
+  <div class="grid-item item1">
+  </div>
+  <div class="grid-item item2">
+    <app-group-list (onSelected)="onGroupSelected($event)" [groups]="groups"></app-group-list>
+  </div>
+  <div class="grid-item item3">
+    <app-channel-preview [channel]="channel"></app-channel-preview>
+  </div>
+  <div class="grid-item item4">
+    <app-channel-grid [channels]="channels" (onSelected)="channel = $event"></app-channel-grid>
+  </div>
+
+</div>
+
+<!-- <div id="player">
   <channel-number-selector></channel-number-selector>
   <div id="loading" *ngIf="loading === true"></div>
-  <!-- <div id="error" *ngIf="error === true"></div> -->
-  <video id="video"></video>
+  <video id="video" type="video/mp4"></video>
   <div id="channelInfo" *ngIf="playlist != null" class="close" >
     <div class="container">
       <div id="channelLogo">
         <div class="arrow-up"></div>
-        <img [src]="playlist.tracks[currentChannel].params['tvg-logo']" />
+        <img [src]="currentChannel.params['tvg-logo']" />
         <div class="arrow-down"></div>
       </div>
       <div id="info">
         <div class="row">
           
-            <div id="channelNumber">{{currentChannel + 1 | number:'3.0'}} </div>
+            <div id="channelNumber">{{currentChannelNumber + 1 | number:'3.0'}} </div>
           
           
-          <div id="channelName">{{playlist.tracks[currentChannel].title}}</div>
+          <div id="channelName">{{currentChannel.name}}</div>
           <div id="time">{{ today | date: 'HH:mm'}}</div>
         </div>
         <div class="row" id="epg">
           <div id="current" class="fadeInTop">Você está assistindo a programação tal</div>
-          <!-- <div id="next">Bom Dia Cidade</div> -->
           <div id="status"  *ngIf="loading === true">Connecting...</div>
           <div id="status" class="resolution" *ngIf="error == false && loading === false && level.width != null">{{level.width}} x {{level.height}}</div>
           <div id="status"  *ngIf="error === true && loading == false">Can't load video</div>
@@ -31,4 +44,4 @@
     </div>
   </div>
 
-</div>
+</div> -->
